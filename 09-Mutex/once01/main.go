@@ -1,0 +1,24 @@
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+func main() {
+	var wg sync.WaitGroup
+
+	var once sync.Once
+	load := func() {
+		fmt.Println("Only once")
+	}
+
+	wg.Add(10)
+	for i := 0; i < 10; i++ {
+		go func() {
+			defer wg.Done()
+			once.Do(load)
+		}()
+	}
+	wg.Wait()
+}
